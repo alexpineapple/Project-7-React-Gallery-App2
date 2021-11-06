@@ -5,6 +5,9 @@ import {
   Switch
 } from 'react-router-dom';
 
+//history
+import { createBrowserHistory } from 'history'
+
 //styles
 import "./css/index.css"
 import './App.css';
@@ -42,7 +45,6 @@ class App extends Component {
         images: [],
         searchTag: preset,
         isLoading: true,
-
       }
     );
 
@@ -105,16 +107,24 @@ class App extends Component {
     this.loadPresetImages()
 
     //re-fetch data if window is refreshed
+    let query = decodeURI(window.location.pathname.substring(3))
+
     if(window.location.pathname.includes('q=') && this.state.searchTag === ''){
-      this.performSearch(window.location.pathname.slice(8))
+      //perfrom search with extracted search term!
+      this.performSearch(query)
     }
   }
 
   render() {
 
+    const history = createBrowserHistory();
+
+    //update state searchTag with url
+    let searchTag = history.location.pathname.substring(3);
+
     //get the pre-defined routes for the navigation buttons
     const navRoutes = navPresets.map((preset, index) =>
-      <Route exact path={"/q=" + preset} key={index} component={() => <Gallery data={this.staticPics[preset]} key={index}></Gallery>}></Route>
+      <Route exact path={"/q=" + preset} key={index} component={() => <Gallery data={this.staticPics[preset]} searchTag={this.staticPics[preset].searchTag} searchFunc={this.performSearch} key={index}></Gallery>}></Route>
     )
 
     return (
@@ -130,7 +140,7 @@ class App extends Component {
             {/*routes for navigation preset buttons*/}
             {navRoutes}
             {/*routes for search queries*/}
-            <Route path="/q=:query" component={() => <Gallery data={this.state}></Gallery>}></Route>
+            <Route exact path="/q=:query" render={() => <Gallery data={this.state} searchTag={searchTag} searchFunc={this.performSearch}></Gallery>}></Route>
             {/*routes if all else fails!*/}
             <Route component={Error}/>
 

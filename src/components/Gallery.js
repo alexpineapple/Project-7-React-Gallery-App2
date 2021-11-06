@@ -1,16 +1,31 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
+import { withRouter } from 'react-router-dom'
 import Item from './Item';
 
-const Gallery = (props) => {
+
+class Gallery extends PureComponent {
+
+  componentDidMount = () => {
+
+    //need to call the search function again, incase forward/back buttons are pressed.
+    this.props.history.listen((location) => {
+      //get query from the current url location
+      let query = decodeURI(location.pathname.substring(3));
+      //call search function from parent component!
+      this.props.searchFunc(query);
+    });
+  }
+
+  render() {
 
     //see if passed data has loaded & not undefined
-    const loading = (props.data.isLoading !== undefined && props.data.isLoading);
+    const loading = (this.props.data.isLoading !== undefined && this.props.data.isLoading);
 
     //assign images and searchTag
-    let searchTerm = props.data.searchTag;
+    let searchTerm = this.props.data.searchTag;
 
     //iterate through data to create all Gallery Items
-    let images = props.data.images.map((image, index) =>
+    let images = this.props.data.images.map((image, index) =>
       <Item
       //pass in url and key to each gallery item
           url={`https://farm${image.farm}.staticflickr.com/${image.server}/${image.id}_${image.secret}_n.jpg`}
@@ -29,7 +44,7 @@ const Gallery = (props) => {
     } else {
 
       //check for no results!
-      if (props.data.images.length > 0) {
+      if (this.props.data.images.length > 0) {
 
         //there's results! display them!
         output = (
@@ -55,6 +70,6 @@ const Gallery = (props) => {
     }
 
     return(output);
+  }
 }
-
-export default Gallery;
+export default withRouter(Gallery);

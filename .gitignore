@@ -16,6 +16,21 @@ config.js
 node_modules/
 jspm_packages/
 
+# 🔹 Firebase Files (These are locally generated)
+.firebase/
+firebase-debug.log
+.firebaserc
+firebase.json
+
+# 🔹 Environment Variables (Keep API keys safe)
+.env
+.env.local
+.env.production
+.env.development
+
+# 🔹 React Build Folder (Firebase Hosting serves from here)
+build/
+
 # Runtime data
 pids
 *.pid

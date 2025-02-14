@@ -9,7 +9,7 @@ import {
 import { createBrowserHistory } from 'history'
 
 //styles
-import "./css/index.css"
+import "./css/starWars.css"
 import './App.css';
 
 //components
@@ -18,11 +18,14 @@ import Home from './components/Home';
 import Gallery from './components/Gallery';
 import Error from './components/Error';
 
-//API key
-import key from './config.js';
-
 //navigation button presets
 import navPresets from './navPresets';
+
+//API key
+//import key from './config.js';
+const apiKey = process.env.REACT_APP_FLICKR_API_KEY;
+
+
 
 class App extends Component {
 
@@ -67,7 +70,8 @@ class App extends Component {
     this.resetLoadState();
 
     //fetch request for the provided query
-    fetch(`https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=${key}&tags=${query}&per_page=24&format=json&nojsoncallback=1`)
+    //fetch(`https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=${key}&tags=${query}&per_page=24&format=json&nojsoncallback=1`)
+    fetch(`https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apiKey}&tags=${query}&per_page=24&format=json&nojsoncallback=1`)
     .then(res => res.json())
     .then(json => {
       this.setState({
@@ -86,8 +90,10 @@ class App extends Component {
 
     //iterate through each present and fetch the data for each nav button!
     navPresets.map((preset, index) =>
-      fetch(`https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=${key}&tags=${preset}&per_page=24&format=json&nojsoncallback=1`)
-        .then(res => res.json())
+      //fetch(`https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=${key}&tags=${preset}&per_page=24&format=json&nojsoncallback=1`)
+      fetch(`https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apiKey}&tags=${preset}&per_page=24&format=json&nojsoncallback=1`)
+
+    .then(res => res.json())
         .then(json => {
               this.staticPics[preset].images = json.photos.photo
               this.staticPics[preset].isLoading = false
